@@ -1,0 +1,30 @@
+{
+  "name": "notes-js",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-local": "nodemon --experimental-modules -r dotenv/config"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jag1g13/notes-js.git"
+  },
+  "author": "James Graham",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/jag1g13/notes-js/issues"
+  },
+  "homepage": "https://github.com/jag1g13/notes-js#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.9"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4"
+  }
+}
