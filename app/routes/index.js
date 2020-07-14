@@ -1,5 +1,6 @@
 import mongodb from 'mongodb'
 
+import * as config from '../config.js'
 import { Note } from '../models/note.js'
 
 export default function (app, db) {
@@ -19,10 +20,12 @@ export default function (app, db) {
         })
     })
 
-    app.get('/api/notes', (req, res) => {
-        // db.collection('notes').get()
-        res.send('Hello GET')
-        Note.list()
+    /**
+     * View returning list of Notes.
+     */
+    app.get('/api/notes', async (req, res) => {
+        const notes = await Note.list(config.notes_dir)
+        res.send(notes)
     })
 
     app.get('/api/notes/:id', (req, res) => {
