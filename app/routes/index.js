@@ -1,5 +1,7 @@
 import mongodb from 'mongodb'
 
+import { Note } from '../models/note.js'
+
 export default function (app, db) {
     app.post('/api/notes', (req, res) => {
         console.log(req.body)
@@ -18,8 +20,9 @@ export default function (app, db) {
     })
 
     app.get('/api/notes', (req, res) => {
-        db.collection('notes').get()
+        // db.collection('notes').get()
         res.send('Hello GET')
+        Note.list()
     })
 
     app.get('/api/notes/:id', (req, res) => {
