@@ -13,7 +13,7 @@ mongodb.MongoClient.connect(config.db_url, (err, database) => {
     if (err) return console.log(err)
     database = database.db('notes-js')
 
-    add_routes(app, { database })
+    add_routes(app, database)
 
     app.listen(config.port, () => {
         console.log('Live on port ' + config.port)
