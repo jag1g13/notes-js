@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "server.js",
+  "main": "app/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start-once": "node -r dotenv/config app/app.js",
     "start-local": "nodemon -r dotenv/config"
   },
   "repository": {
