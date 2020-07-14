@@ -1,7 +1,9 @@
+import child_process from 'child_process'
 import fs from 'fs'
 import path from 'path'
 
 import matter from 'gray-matter'
+import { config } from 'process'
 
 class Note {
     constructor(title, date, content) {
@@ -24,6 +26,27 @@ class Note {
             parsed.data.date,
             parsed.content
         )
+    }
+
+    /**
+     * Pull changes from upstream to a git repository.
+     * 
+     * @param {string} dirpath - Path of directory containing git repository to update
+     */
+    static pull_repo(dirpath) {
+        const env = { ...process.env }
+        if (config.git_ssh_keyfile) {
+            env['GIT_SSH_COMMAND'] = `ssh -i ${config.git_ssh_keyfile} -o IdentitiesOnly=yes`
+        }
+
+        console.log('Pulling changes to notes repo')
+        child_process.exec('git pull --ff-only', {
+            cwd: dirpath,
+            env: env
+        }, (err, stdout) => {
+            console.log(stdout)
+            if (err) console.log(err)
+        })
     }
 
     /**

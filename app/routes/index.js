@@ -24,6 +24,9 @@ export default function (app, db) {
      * View returning list of Notes.
      */
     app.get('/api/notes', async (req, res) => {
+        // Pull changes to notes
+        Note.pull_repo(config.notes_repo_dir)
+
         const notes = await Note.list(config.notes_dir)
         res.send(notes)
     })
