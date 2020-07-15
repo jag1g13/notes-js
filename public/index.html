@@ -6,6 +6,13 @@
     <!-- Dynamic stylesheet - so no href to begin with -->
     <link id="theme_css" rel="stylesheet">
 
+    <script type="application/javascript">
+        const theme_css_element = document.getElementById('theme_css')
+        const default_css = localStorage.getItem('default_css')
+
+        if (default_css) theme_css_element.href = default_css
+    </script>
+
     <link rel="shortcut icon" href="/static/img/icon-note.svg">
 </head>
 
@@ -41,39 +48,57 @@
     </section>
 
     <script type="application/javascript">
-        function select_from_array(select, array, text_field, value_field, default_text) {
-            let default_value = '';
+        /**
+         * Get default theme from storage or default value.
+         */
+        function get_default_theme() {
+            let default_theme = localStorage.getItem('default_theme')
+            if (!default_theme) {
+                default_theme = 'Default'
+                localStorage.setItem('default_theme', default_theme)
+            }
+
+            return default_theme
+        }
+
+        /**
+         * Populate options of select element from array of themes.
+         */
+        function select_from_array(select, array) {
+            const default_theme = get_default_theme()
+            let default_css = '';
 
             for (const val of array) {
-                const option = document.createElement('option')
-                option.text = val[text_field]
-                option.value = val[value_field]
-                if (val[text_field] === default_text) {
-                    option.defaultSelected = true
-                    default_value = option.value
-                }
+                const is_selected = val.name === default_theme
+                if (is_selected) default_css = val.css
+
+                const option = new Option(
+                    val.name,
+                    val.css,
+                    is_selected,
+                    is_selected
+                )
 
                 select.add(option)
             }
 
-            return default_value
+            return default_css
         }
 
-        const theme_link = document.getElementById('theme_css')
-        const theme_select = document.getElementById('theme_select')
-        const default_theme_name = 'Default'
+        const theme_select_element = document.getElementById('theme_select')
 
         fetch('https://jenil.github.io/bulmaswatch/api/themes.json')
             .then(resp => resp.json())
-            .then(resp => select_from_array(theme_select, resp.themes, 'name', 'css', default_theme_name))
-            .then(resp => theme_link.href = resp)
+            .then(resp => select_from_array(theme_select_element, resp.themes))
+            .then(selected_css => theme_css_element.href = selected_css)
             .catch(err => console.log(err))
 
         theme_select.addEventListener('change', (event) => {
-            theme_link.href = event.target.value
+            const select = event.target
+            theme_css_element.href = select.value
+            localStorage.setItem('default_theme', select.options[select.selectedIndex].text)
+            localStorage.setItem('default_css', select.value)
         })
-
-        theme_link.href = theme_select.value
     </script>
 
     <script type="module" src="static/js/app.js"></script>
