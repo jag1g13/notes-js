@@ -16,7 +16,7 @@ class Note {
      * Read a Note from a Markdown file with YAML frontmatter.
      * 
      * @param {string} filepath - Path of file from which to read a Note
-     * @return {Promise<Note>} A Note object
+     * @returns {Promise<Note>} A Note object
      */
     static async from_file(filepath) {
         const file = await fs.promises.readFile(filepath)
@@ -32,20 +32,23 @@ class Note {
      * Pull changes from upstream to a git repository.
      * 
      * @param {string} dirpath - Path of directory containing git repository to update
+     * @returns {Promise<Options<string, Error>} Output of child process
      */
     static pull_repo(dirpath) {
-        const env = { ...process.env }
+        const options = {
+            cwd: dirpath,
+            env: { ...process.env }
+        }
         if (config.git_ssh_keyfile) {
-            env['GIT_SSH_COMMAND'] = `ssh -i ${config.git_ssh_keyfile} -o IdentitiesOnly=yes`
+            options.env['GIT_SSH_COMMAND'] = `ssh -i ${config.git_ssh_keyfile} -o IdentitiesOnly=yes`
         }
 
         console.log('Pulling changes to notes repo')
-        child_process.exec('git pull --ff-only', {
-            cwd: dirpath,
-            env: env
-        }, (err, stdout) => {
-            console.log(stdout)
-            if (err) console.log(err)
+        return new Promise((resolve, reject) => {
+            child_process.exec('git pull --ff-only', options, (err, stdout, stderr) => {
+                if (err) reject(err)
+                resolve(stdout ? stdout : stderr)
+            })
         })
     }
 
@@ -53,7 +56,7 @@ class Note {
      * Read Notes in Markdown files from a directory.
      * 
      * @param {string} dirpath - Path of directory from which to read Notes
-     * @return {Promise<Array<Note>>} Array of Note objects
+     * @returns {Promise<Array<Note>>} Array of Note objects
      */
     static async list(dirpath) {
         const notes_dir = path.resolve(dirpath)

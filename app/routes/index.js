@@ -22,13 +22,14 @@ export default function (app, db) {
 
     /**
      * View returning list of Notes.
+     * 
+     * Update notes repo then read notes.
      */
-    app.get('/api/notes', async (req, res) => {
-        // Pull changes to notes
+    app.get('/api/notes', (req, res) => {
         Note.pull_repo(config.notes_repo_dir)
-
-        const notes = await Note.list(config.notes_dir)
-        res.send(notes)
+            .then(output => console.log(output))
+            .catch(err => console.error(err))
+            .then(async () => res.send(await Note.list(config.notes_dir)))
     })
 
     app.get('/api/notes/:id', (req, res) => {
