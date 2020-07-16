@@ -1,6 +1,8 @@
 import * as Preact from 'https://unpkg.com/htm/preact/standalone.module.js'
 import marked from 'https://unpkg.com/marked@1.1.0/lib/marked.esm.js'
 
+import { ProjectChartComponent, DoughnutChartComponent } from './projects.js'
+
 /**
  * Component providing detail and list views of notes fetched from API.
  */
@@ -35,6 +37,8 @@ class NotesComponent extends Preact.Component {
         return Preact.html`
             <div class="columns">
                 <div class="column is-three-quarters">
+                    <${ProjectChartComponent} chart_id=${'main-chart'}/>
+
                     <${NoteDetailComponent} notes=${state.notes} selected=${state.selected}/>
                 </div>
 
@@ -89,9 +93,22 @@ function NoteListItemComponent(props) {
     return Preact.html`
         <div class="${'card mt-3' + (props.selected ? ' has-background-info' : '')}" onclick=${handle_click}>
             <div class="card-content">
-                <h4 class="title is-4">
-                    ${props.title}
-                </h4>
+                <div class="media">
+                    <div class="media-content">
+                        <h4 class="title is-4">
+                            ${props.title}
+                        </h4>
+                    </div>
+
+                    <div class="media-left">
+                        <figure class="image">
+                        </figure>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <${DoughnutChartComponent} chart_id=${'chart' + props.id} />
+                </div>
             </div>
         </div>
     `
