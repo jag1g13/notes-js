@@ -6,3 +6,7 @@
 
 # Environment
 /node_modules/
+
+# Build
+/build/
+/server/build/
