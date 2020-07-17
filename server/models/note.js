@@ -6,9 +6,10 @@ import matter from 'gray-matter'
 import { config } from 'process'
 
 class Note {
-    constructor(title, date, content) {
+    constructor(title, date, metadata, content) {
         this.title = title
         this.date = date
+        this.metadata = metadata
         this.content = content
     }
 
@@ -24,6 +25,7 @@ class Note {
         return new Note(
             path.basename(filepath),
             parsed.data.date,
+            parsed.data,
             parsed.content
         )
     }

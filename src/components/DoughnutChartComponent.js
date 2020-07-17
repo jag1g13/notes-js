@@ -5,26 +5,27 @@ import { ChartComponent } from './ChartComponent.js'
 export default class DoughnutChartComponent extends ChartComponent {
     componentDidMount() {
         const data = {
-            labels: ['1', '2'],
+            labels: Object.keys(this.props.data),
             datasets: [
                 {
-                    label: '1',
-                    data: [1, 2],
+                    data: Object.values(this.props.data)
                 }
             ]
         }
 
-        this.create_chart('doughnut', data, {})
+        const options = {
+            legend: {
+                position: 'left'
+            },
+            responsive: false
+        }
+
+        this.create_chart('doughnut', data, options)
     }
 
     render(props, state) {
-        const style = {
-            // position: 'relative',
-            // height: '1vh'
-        }
-
         return (
-            <div className="chart-container" style={style}>
+            <div className="chart-container">
                 <canvas ref={this.ref}></canvas>
             </div>
         )

@@ -9,11 +9,6 @@ import * as config from './config.js'
 
 const app = express()
 
-// Serve static files from 'public' directory
-const static_path = path.join(path.resolve(), 'public')
-console.log(static_path)
-app.use(express.static(static_path))
-
 app.use(body_parser.json())
 
 const mongo_client = mongodb.MongoClient(

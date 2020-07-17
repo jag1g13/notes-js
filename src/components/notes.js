@@ -76,7 +76,7 @@ function NoteDetailComponent(props) {
  */
 function NoteListComponent(props) {
     const list_items = props.notes.map((note, index) =>
-        <NoteListItemComponent key={index} id={index} select_note={props.select_note} selected={index === props.selected_note} {...note} />
+        <NoteListItemComponent key={index} id={index} select_note={props.select_note} selected={index === props.selected_note} note={note} />
     )
 
     return (
@@ -101,7 +101,7 @@ function NoteListItemComponent(props) {
                 <div className="media">
                     <div className="media-content">
                         <h4 className="title is-4">
-                            {props.title}
+                            {props.note.title}
                         </h4>
                     </div>
 
@@ -112,7 +112,7 @@ function NoteListItemComponent(props) {
                 </div>
 
                 <div className="content">
-                    <DoughnutChartComponent />
+                    <DoughnutChartComponent data={props.note.metadata.projects} />
                 </div>
             </div>
         </div>
