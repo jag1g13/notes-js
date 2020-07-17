@@ -1,12 +1,12 @@
-import * as Preact from 'https://unpkg.com/htm/preact/standalone.module.js'
-import marked from 'https://unpkg.com/marked@1.1.0/lib/marked.esm.js'
+import React from 'react'
+import marked from 'marked'
 
 import { ProjectChartComponent, DoughnutChartComponent } from './projects.js'
 
 /**
  * Component providing detail and list views of notes fetched from API.
  */
-class NotesComponent extends Preact.Component {
+class NotesComponent extends React.Component {
     constructor() {
         super()
         this.state = {
@@ -34,23 +34,23 @@ class NotesComponent extends Preact.Component {
     }
 
     render(props, state) {
-        return Preact.html`
-            <div class="columns">
-                <div class="column is-three-quarters">
-                    <${ProjectChartComponent}/>
+        return (
+            <div className="columns">
+                <div className="column is-three-quarters">
+                    <ProjectChartComponent />
 
-                    <${NoteDetailComponent} notes=${state.notes} selected=${state.selected}/>
+                    <NoteDetailComponent notes={this.state.notes} selected={this.state.selected} />
                 </div>
 
-                <div class="column">
-                    <${NoteListComponent}
-                    notes=${state.notes}
-                    on_refresh=${this.fetch_notes}
-                    select_note=${this.select_note}
-                    selected_note=${state.selected} />
+                <div className="column">
+                    <NoteListComponent
+                        notes={this.state.notes}
+                        on_refresh={this.fetch_notes}
+                        select_note={this.select_note}
+                        selected_note={this.state.selected} />
                 </div>
             </div>
-        `
+        )
     }
 }
 
@@ -59,27 +59,31 @@ class NotesComponent extends Preact.Component {
  */
 function NoteDetailComponent(props) {
     if (props.selected < props.notes.length) {
-        const content = props.notes[props.selected].content
+        const content = marked(props.notes[props.selected].content)
 
-        return Preact.html`
-            <div class="content" dangerouslySetInnerHTML=${{
-                __html: marked(props.notes[props.selected].content)
+        return (
+            <div className="content" dangerouslySetInnerHTML={{
+                __html: content
             }}></div>
-        `
+        )
     }
-    return Preact.html`<h1>No Content</h1>`
+    return <h1>No Content</h1>
 }
 
 /**
  * Component providing a list of note items.
  */
 function NoteListComponent(props) {
-    return Preact.html`
-        <button class="button is-fullwidth is-primary" onClick=${props.on_refresh}>Refresh</button>
-        ${props.notes.map((note, index) => Preact.html`
-                <${NoteListItemComponent} id=${index} select_note=${props.select_note} selected=${index === props.selected_note} ...${note}/>
-        `)}
-    `
+    const list_items = props.notes.map((note, index) =>
+        <NoteListItemComponent key={index} select_note={props.select_note} selected={index === props.selected_note} {...note} />
+    )
+
+    return (
+        <div>
+            <button className="button is-fullwidth is-primary" onClick={props.on_refresh}>Refresh</button>
+            <ul>{list_items}</ul>
+        </div>
+    )
 }
 
 /**
@@ -87,31 +91,31 @@ function NoteListComponent(props) {
  */
 function NoteListItemComponent(props) {
     function handle_click(event) {
-        props.select_note(props.id)
+        props.select_note(props.key)
     }
 
-    return Preact.html`
-        <div class="${'card mt-3' + (props.selected ? ' has-background-info' : '')}" onclick=${handle_click}>
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-content">
-                        <h4 class="title is-4">
+    return (
+        <div className={'card mt-3' + (props.selected ? ' has-background-info' : '')} onClick={handle_click}>
+            <div className="card-content">
+                <div className="media">
+                    <div className="media-content">
+                        <h4 className="title is-4">
                             ${props.title}
                         </h4>
                     </div>
 
-                    <div class="media-left">
-                        <figure class="image">
+                    <div className="media-left">
+                        <figure className="image">
                         </figure>
                     </div>
                 </div>
 
-                <div class="content">
-                    <${DoughnutChartComponent}/>
+                <div className="content">
+                    <DoughnutChartComponent />
                 </div>
             </div>
         </div>
-    `
+    )
 }
 
 export { NotesComponent }
