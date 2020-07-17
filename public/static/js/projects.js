@@ -1,21 +1,22 @@
-import * as Preact from 'https://unpkg.com/htm/preact/standalone.module.js'
+import html from 'https://unpkg.com/htm/dist/htm.module.js'
+import * as Preact from 'https://unpkg.com/preact/dist/preact.module.js'
+
 import 'https://unpkg.com/chart.js/dist/Chart.bundle.js'
 import 'https://unpkg.com/chartjs-plugin-colorschemes'
 
 class ChartComponent extends Preact.Component {
+    ref = Preact.createRef()
+
     create_chart(type, data, options) {
-        const ctx = document.getElementById(this.props.chart_id)
+        if (this.ref.current) {
+            const chart = new Chart(this.ref.current, {
+                type: type,
+                data: data,
+                options: options
+            })
 
-        const chart = new Chart(ctx, {
-            type: type,
-            data: data,
-            options: options
-        })
-
-        this.setState({
-            chart_element: ctx,
-            chart: chart
-        })
+            this.setState({ chart: chart })
+        }
     }
 }
 
@@ -53,9 +54,9 @@ class ProjectChartComponent extends ChartComponent {
     }
 
     render(props, state) {
-        return Preact.html`
+        return html`
             <div class="chart-container" style="position: relative; height: 20vh">
-                <canvas id="${props.chart_id}" width="400px" height="400px"></canvas>
+                <canvas ref=${this.ref} width="400px" height="400px"></canvas>
             </div>
         `
     }
@@ -77,9 +78,9 @@ class DoughnutChartComponent extends ChartComponent {
     }
 
     render(props, state) {
-        return Preact.html`
+        return html`
             <div class="chart-container" style="position: relative; height: 10vh">
-                <canvas id="${props.chart_id}" width="400px" height="400px"></canvas>
+                <canvas ref=${this.ref} width="400px" height="400px"></canvas>
             </div>
         `
     }

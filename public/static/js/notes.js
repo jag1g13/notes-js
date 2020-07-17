@@ -37,7 +37,7 @@ class NotesComponent extends Preact.Component {
         return Preact.html`
             <div class="columns">
                 <div class="column is-three-quarters">
-                    <${ProjectChartComponent} chart_id=${'main-chart'}/>
+                    <${ProjectChartComponent}/>
 
                     <${NoteDetailComponent} notes=${state.notes} selected=${state.selected}/>
                 </div>
@@ -107,7 +107,7 @@ function NoteListItemComponent(props) {
                 </div>
 
                 <div class="content">
-                    <${DoughnutChartComponent} chart_id=${'chart' + props.id} />
+                    <${DoughnutChartComponent}/>
                 </div>
             </div>
         </div>
