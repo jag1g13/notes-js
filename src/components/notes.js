@@ -1,7 +1,8 @@
 import React from 'react'
 import marked from 'marked'
 
-import { ProjectChartComponent, DoughnutChartComponent } from './projects.js'
+import ProjectChartComponent from './ProjectChartComponent.js'
+import DoughnutChartComponent from './DoughnutChartComponent.js'
 
 /**
  * Component providing detail and list views of notes fetched from API.
@@ -75,7 +76,7 @@ function NoteDetailComponent(props) {
  */
 function NoteListComponent(props) {
     const list_items = props.notes.map((note, index) =>
-        <NoteListItemComponent key={index} select_note={props.select_note} selected={index === props.selected_note} {...note} />
+        <NoteListItemComponent key={index} id={index} select_note={props.select_note} selected={index === props.selected_note} {...note} />
     )
 
     return (
@@ -91,7 +92,7 @@ function NoteListComponent(props) {
  */
 function NoteListItemComponent(props) {
     function handle_click(event) {
-        props.select_note(props.key)
+        props.select_note(props.id)
     }
 
     return (
@@ -100,7 +101,7 @@ function NoteListItemComponent(props) {
                 <div className="media">
                     <div className="media-content">
                         <h4 className="title is-4">
-                            ${props.title}
+                            {props.title}
                         </h4>
                     </div>
 
