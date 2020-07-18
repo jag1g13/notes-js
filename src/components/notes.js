@@ -34,7 +34,7 @@ class NotesComponent extends React.Component {
         this.setState({ selected: note_id })
     }
 
-    render(props, state) {
+    render() {
         const projects = new Set()
 
         for (const note of this.state.notes) {
@@ -47,7 +47,12 @@ class NotesComponent extends React.Component {
             label: project,
             data: this.state.notes.map(note => {
                 return note.metadata.projects[project] || 0
-            })
+            }),
+
+            // Add border to selected column
+            borderWidth: context => this.state.selected === context.dataIndex ? 8 : 0,
+            borderSkipped: false,
+            borderColor: 'rgba(0, 0, 0, 0.2)'
 
         }))
 
