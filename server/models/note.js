@@ -64,7 +64,7 @@ class Note {
         const notes_dir = path.resolve(dirpath)
 
         let files = await fs.promises.readdir(notes_dir)
-        files = files.filter(file => path.extname(file) === '.md')
+        files = files.filter(file => path.extname(file) === '.md').reverse()
 
         const notes = files.map(file => {
             const fullpath = path.join(notes_dir, file)

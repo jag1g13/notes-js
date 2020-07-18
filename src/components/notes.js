@@ -35,7 +35,7 @@ class NotesComponent extends React.Component {
     }
 
     render() {
-        const projects = new Set()
+        let projects = new Set()
 
         for (const note of this.state.notes) {
             for (const project in note.metadata.projects) {
@@ -43,7 +43,9 @@ class NotesComponent extends React.Component {
             }
         }
 
-        const datasets = Array.from(projects).map(project => ({
+        projects = Array.from(projects).sort()
+
+        const datasets = projects.map(project => ({
             label: project,
             data: this.state.notes.map(note => {
                 return note.metadata.projects[project] || 0
@@ -67,7 +69,7 @@ class NotesComponent extends React.Component {
                     <NoteDetailComponent note={this.state.notes[this.state.selected]} />
                 </div>
 
-                <div className="column">
+                <div className="column is-one-quarter">
                     <NoteListComponent
                         notes={this.state.notes}
                         on_refresh={this.fetch_notes}
