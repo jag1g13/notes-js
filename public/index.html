@@ -1,105 +1,45 @@
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <title>Notes Tracker</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
 
-    <!-- Dynamic stylesheet - so no href to begin with -->
-    <link id="theme_css" rel="stylesheet">
-
-    <script type="application/javascript">
-        const theme_css_element = document.getElementById('theme_css')
-        const default_css = localStorage.getItem('default_css')
-
-        if (default_css) theme_css_element.href = default_css
-    </script>
-
-    <link rel="shortcut icon" href="/static/img/icon-note.svg">
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
 </head>
 
 <body>
-    <nav class="navbar has-background-primary" role="navigation">
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <img src="/static/img/icon-notebook.svg">
-                Note Tracker
-            </div>
-        </div>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
 
-        <div class="navbar-end">
-            <div class="navbar-item">
-                <div class="control has-icons-left">
-                    <div class="select">
-                        <select id="theme_select">
-                        </select>
-                    </div>
+    <div id="root"></div>
 
-                    <div class="icon is-left">
-                        <img src="/static/img/icon-color-swatch.svg">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
 
-    <section class="section">
-        <div class="container">
-            <div id="app"></div>
-        </div>
-    </section>
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
 
-    <script type="application/javascript">
-        /**
-         * Get default theme from storage or default value.
-         */
-        function get_default_theme() {
-            let default_theme = localStorage.getItem('default_theme')
-            if (!default_theme) {
-                default_theme = 'Default'
-                localStorage.setItem('default_theme', default_theme)
-            }
-
-            return default_theme
-        }
-
-        /**
-         * Populate options of select element from array of themes.
-         */
-        function select_from_array(select, array) {
-            const default_theme = get_default_theme()
-            let default_css = '';
-
-            for (const val of array) {
-                const is_selected = val.name === default_theme
-                if (is_selected) default_css = val.css
-
-                const option = new Option(
-                    val.name,
-                    val.css,
-                    is_selected,
-                    is_selected
-                )
-
-                select.add(option)
-            }
-
-            return default_css
-        }
-
-        const theme_select_element = document.getElementById('theme_select')
-
-        fetch('https://jenil.github.io/bulmaswatch/api/themes.json')
-            .then(resp => resp.json())
-            .then(resp => select_from_array(theme_select_element, resp.themes))
-            .then(selected_css => theme_css_element.href = selected_css)
-            .catch(err => console.log(err))
-
-        theme_select.addEventListener('change', (event) => {
-            const select = event.target
-            theme_css_element.href = select.value
-            localStorage.setItem('default_theme', select.options[select.selectedIndex].text)
-            localStorage.setItem('default_css', select.value)
-        })
-    </script>
-
-    <script type="module" src="static/js/app.js"></script>
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
 </body>
+
+</html>

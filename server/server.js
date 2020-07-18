@@ -9,12 +9,15 @@ import * as config from './config.js'
 
 const app = express()
 
-// Serve static files from 'public' directory
-const static_path = path.join(path.resolve(), 'public')
-console.log(static_path)
-app.use(express.static(static_path))
-
 app.use(body_parser.json())
+
+if (config.node_env === 'production') {
+    // Serve React build dir if running in production mode
+    const static_path = path.resolve('build')
+    app.use(express.static(static_path))
+
+    app.get('/', (req, res) => res.sendFile(path.join(static_path, 'index.html')))
+}
 
 const mongo_client = mongodb.MongoClient(
     config.db_url,

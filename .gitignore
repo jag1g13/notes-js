@@ -4,5 +4,9 @@
 # Settings
 .env
 
-# Environment
+# Data
+/notes
+
+# Build
+/build/
 /node_modules/
