@@ -1,9 +1,25 @@
-import React from 'react'
 import moment from 'moment'
 
-import { ChartComponent } from './ChartComponent.js'
+import ChartComponent from './ChartComponent.js'
 
+/**
+ * Stacked bar chart displaying time spent on projects each day.
+ */
 export default class ProjectChartComponent extends ChartComponent {
+    /**
+     * When column is clicked, select this note in the parent component.
+     */
+    handle_click(evt) {
+        const element = this.state.chart.getElementAtEvent(evt)[0]
+
+        if (element !== undefined) {
+            this.props.select_note(element._index)
+        }
+    }
+
+    /**
+     * Configure chart element before data is loaded.
+     */
     componentDidMount() {
         const options = {
             scales: {
@@ -24,18 +40,17 @@ export default class ProjectChartComponent extends ChartComponent {
                 yAxes: [{
                     stacked: true,
                     ticks: {
-                        beginAtZero: true,
-                        min: 0,
-                        max: 1,
+                        startAtZero: true,
                         stepSize: 0.25,
-                        callback: (value, index, values) => value.toFixed(2),
+                        callback: value => value.toFixed(2),
                         padding: 5
                     },
                     gridLines: {
                         drawBorder: false
                     }
                 }]
-            }
+            },
+            onClick: this.handle_click.bind(this)
         }
 
         this.create_chart('bar', {}, options)
@@ -43,15 +58,12 @@ export default class ProjectChartComponent extends ChartComponent {
 
     render() {
         if (this.state) {
+            // Load data passed in through props
             const chart = this.state.chart
             chart.data = this.props.data
             chart.update()
         }
 
-        return (
-            <div className="chart-container">
-                <canvas ref={this.ref}></canvas>
-            </div>
-        )
+        return super.render()
     }
 }

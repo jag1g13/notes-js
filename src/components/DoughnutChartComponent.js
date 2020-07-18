@@ -1,4 +1,4 @@
-import { ChartComponent } from './ChartComponent.js'
+import ChartComponent from './ChartComponent.js'
 
 export default class DoughnutChartComponent extends ChartComponent {
     componentDidMount() {

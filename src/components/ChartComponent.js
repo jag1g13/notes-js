@@ -3,12 +3,12 @@ import 'chartjs-plugin-colorschemes'
 
 import { Chart } from 'chart.js'
 
-class ChartComponent extends React.Component {
-    ref = React.createRef()
+export default class ChartComponent extends React.Component {
+    chart_ref = React.createRef()
 
     create_chart(type, data, options) {
-        if (this.ref.current) {
-            const chart = new Chart(this.ref.current, {
+        if (this.chart_ref.current) {
+            const chart = new Chart(this.chart_ref.current, {
                 type: type,
                 data: data,
                 options: options
@@ -18,14 +18,11 @@ class ChartComponent extends React.Component {
         }
     }
 
-    render(props, state) {
+    render() {
         return (
             <div className="chart-container">
-                <canvas ref={this.ref}></canvas>
+                <canvas ref={this.chart_ref}></canvas>
             </div>
         )
     }
 }
-
-
-export { ChartComponent }

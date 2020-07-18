@@ -57,7 +57,7 @@ class NotesComponent extends React.Component {
                     <ProjectChartComponent data={{
                         labels: this.state.notes.map(note => note.date),
                         datasets: datasets
-                    }} />
+                    }} select_note={this.select_note} />
 
                     <NoteDetailComponent note={this.state.notes[this.state.selected]} />
                 </div>
