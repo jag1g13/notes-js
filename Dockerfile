@@ -1,21 +1,43 @@
-FROM node:current-alpine
-
-RUN apk add --no-cache git
+###################
+# Build environment
+FROM node:current-alpine as build
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
+
+# Install app dependencies
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY public public
+COPY src src
+
+RUN npm run build-front
+
+
+########################
+# Production environment
+FROM node:current-alpine
+
+RUN apk add --no-cache git openssh
+
+# Create app directory
+WORKDIR /app
 
 # Install app dependencies
 COPY package*.json ./
 RUN npm ci --only=production
 
 # Bundle app source
-COPY . .
+COPY server server
+COPY --from=build /app/build build
 
 EXPOSE 8080
 
 ENV NOTES_REPO_DIR=/notes
 ENV NOTES_DIR=/notes/days
-ENV PORT=8080
+ENV SERVER_PORT=8080
 
-CMD [ "node", "app/app.js" ]
+ENV NODE_ENV=production
+
+CMD [ "node", "server/server.js" ]
