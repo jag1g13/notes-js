@@ -1,33 +1,34 @@
-import React from 'react'
-
 import { ChartComponent } from './ChartComponent.js'
 
 export default class DoughnutChartComponent extends ChartComponent {
     componentDidMount() {
         const data = {
-            labels: Object.keys(this.props.data),
-            datasets: [
-                {
-                    data: Object.values(this.props.data)
-                }
-            ]
+            labels: ['Time spent'],
+            datasets: Object.entries(this.props.data).map(
+                ([key, value]) => ({ label: key, data: [value] })
+            )
         }
 
         const options = {
             legend: {
-                position: 'left'
+                position: 'bottom'
             },
-            responsive: false
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                    display: false,
+                    ticks: {
+                        min: 0,
+                        max: 1
+                    }
+                }],
+                yAxes: [{
+                    stacked: true,
+                    display: false
+                }]
+            }
         }
 
-        this.create_chart('doughnut', data, options)
-    }
-
-    render(props, state) {
-        return (
-            <div className="chart-container">
-                <canvas ref={this.ref}></canvas>
-            </div>
-        )
+        this.create_chart('horizontalBar', data, options)
     }
 }

@@ -26,7 +26,7 @@ class NotesComponent extends React.Component {
     fetch_notes() {
         fetch('/api/notes')
             .then(res => res.json())
-            .then(res => this.setState({ notes: res }))
+            .then(notes => this.setState({ notes: notes }))
             .catch(exc => console.log(exc))
     }
 
@@ -35,12 +35,31 @@ class NotesComponent extends React.Component {
     }
 
     render(props, state) {
+        const projects = new Set()
+
+        for (const note of this.state.notes) {
+            for (const project in note.metadata.projects) {
+                projects.add(project)
+            }
+        }
+
+        const datasets = Array.from(projects).map(project => ({
+            label: project,
+            data: this.state.notes.map(note => {
+                return note.metadata.projects[project] || 0
+            })
+
+        }))
+
         return (
             <div className="columns">
                 <div className="column is-three-quarters">
-                    <ProjectChartComponent />
+                    <ProjectChartComponent data={{
+                        labels: this.state.notes.map(note => note.date),
+                        datasets: datasets
+                    }} />
 
-                    <NoteDetailComponent notes={this.state.notes} selected={this.state.selected} />
+                    <NoteDetailComponent note={this.state.notes[this.state.selected]} />
                 </div>
 
                 <div className="column">
@@ -59,8 +78,8 @@ class NotesComponent extends React.Component {
  * Component providing detail of a single note.
  */
 function NoteDetailComponent(props) {
-    if (props.selected < props.notes.length) {
-        const content = marked(props.notes[props.selected].content)
+    if (props.note) {
+        const content = marked(props.note.content)
 
         return (
             <div className="content" dangerouslySetInnerHTML={{
@@ -91,12 +110,8 @@ function NoteListComponent(props) {
  * Component providing brief overview of a note.
  */
 function NoteListItemComponent(props) {
-    function handle_click(event) {
-        props.select_note(props.id)
-    }
-
     return (
-        <div className={'card mt-3' + (props.selected ? ' has-background-info' : '')} onClick={handle_click}>
+        <div className={'card mt-3' + (props.selected ? ' has-background-info' : '')} onClick={() => props.select_note(props.id)}>
             <div className="card-content">
                 <div className="media">
                     <div className="media-content">

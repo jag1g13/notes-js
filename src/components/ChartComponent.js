@@ -17,6 +17,14 @@ class ChartComponent extends React.Component {
             this.setState({ chart: chart })
         }
     }
+
+    render(props, state) {
+        return (
+            <div className="chart-container">
+                <canvas ref={this.ref}></canvas>
+            </div>
+        )
+    }
 }
 
 
