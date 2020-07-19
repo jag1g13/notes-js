@@ -7,7 +7,7 @@ import DoughnutChartComponent from './DoughnutChartComponent.js'
 /**
  * Component providing detail and list views of notes fetched from API.
  */
-class NotesComponent extends React.Component {
+export class NotesComponent extends React.Component {
     constructor() {
         super()
         this.state = {
@@ -84,7 +84,7 @@ class NotesComponent extends React.Component {
 /**
  * Component providing detail of a single note.
  */
-function NoteDetailComponent(props) {
+export function NoteDetailComponent(props) {
     if (props.note) {
         const content = marked(props.note.content)
 
@@ -100,7 +100,7 @@ function NoteDetailComponent(props) {
 /**
  * Component providing a list of note items.
  */
-function NoteListComponent(props) {
+export function NoteListComponent(props) {
     const list_items = props.notes.map((note, index) =>
         <NoteListItemComponent key={index} id={index} select_note={props.select_note} selected={index === props.selected_note} note={note} />
     )
@@ -116,7 +116,7 @@ function NoteListComponent(props) {
 /**
  * Component providing brief overview of a note.
  */
-function NoteListItemComponent(props) {
+export function NoteListItemComponent(props) {
     return (
         <div className={'card mt-3' + (props.selected ? ' has-background-info' : '')} onClick={() => props.select_note(props.id)}>
             <div className="card-content">
@@ -140,5 +140,3 @@ function NoteListItemComponent(props) {
         </div>
     )
 }
-
-export { NotesComponent }
