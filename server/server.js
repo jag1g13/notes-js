@@ -2,7 +2,7 @@ import path from 'path'
 
 import bodyParser from 'body-parser'
 import express from 'express'
-import mongodb from 'mongodb'
+import mongoose from 'mongoose'
 
 import notesRouter from './routes/notes.js'
 import * as config from './config.js'
@@ -20,22 +20,16 @@ if (config.node_env === 'production') {
   app.get('/', (req, res) => res.sendFile(path.join(staticPath, 'index.html')))
 }
 
-const mongo = mongodb.MongoClient(
-  config.db_url,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  }
-)
+mongoose.connect(config.db_url, {
+  useFindAndModify: false, // Required for findOneAndUpdate
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
 
-mongo.connect((err, db) => {
-  if (err) return console.err(err)
-  db = db.db('notes-js')
+const db = mongoose.connection
+db.on('error', (err) => console.error(err))
+db.once('open', () => console.log('Connected to database'))
 
-  const noteCollection = db.collection('notes')
-  noteCollection.createIndex({ date: -1 })
-
-  app.listen(config.port, () => {
-    console.log('Live on port ' + config.port)
-  })
+app.listen(config.port, config.address, () => {
+  console.log('Live on ' + config.address + ':' + config.port)
 })
