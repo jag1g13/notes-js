@@ -25,7 +25,7 @@ function noteCreate (req, res) {
  * Update notes repo then read notes.
  */
 async function noteList (req, res) {
-  await Note.pull_repo(config.notes_repo_dir)
+  await Note.pullRepo(config.notes_repo_dir)
     .then(output => console.log(output))
     .catch(err => console.error(err))
 
