@@ -1,39 +1,41 @@
 import path from 'path'
 
-import body_parser from 'body-parser'
+import bodyParser from 'body-parser'
 import express from 'express'
 import mongodb from 'mongodb'
 
-import add_routes from './routes/index.js'
+import notesRouter from './routes/notes.js'
 import * as config from './config.js'
 
 const app = express()
 
-app.use(body_parser.json())
+app.use(bodyParser.json())
+app.use('/api/notes', notesRouter)
 
 if (config.node_env === 'production') {
-    // Serve React build dir if running in production mode
-    const static_path = path.resolve('build')
-    app.use(express.static(static_path))
+  // Serve React build dir if running in production mode
+  const staticPath = path.resolve('build')
+  app.use(express.static(staticPath))
 
-    app.get('/', (req, res) => res.sendFile(path.join(static_path, 'index.html')))
+  app.get('/', (req, res) => res.sendFile(path.join(staticPath, 'index.html')))
 }
 
-const mongo_client = mongodb.MongoClient(
-    config.db_url,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }
+const mongo = mongodb.MongoClient(
+  config.db_url,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
 )
 
-mongo_client.connect((err, database) => {
-    if (err) return console.log(err)
-    database = database.db('notes-js')
+mongo.connect((err, db) => {
+  if (err) return console.err(err)
+  db = db.db('notes-js')
 
-    add_routes(app, database)
+  const noteCollection = db.collection('notes')
+  noteCollection.createIndex({ date: -1 })
 
-    app.listen(config.port, () => {
-        console.log('Live on port ' + config.port)
-    })
+  app.listen(config.port, () => {
+    console.log('Live on port ' + config.port)
+  })
 })
