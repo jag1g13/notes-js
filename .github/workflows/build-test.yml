@@ -28,6 +28,7 @@ jobs:
     - run: npm ci
     - run: npm run build-front --if-present
     - run: npm test
+    - run: npx standard "server/**/*.js" "src/**/*.js"
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v1.1.0
@@ -36,4 +37,3 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: jgraham0/notes-js
         tag_with_ref: true
-        tag_with_sha: true
