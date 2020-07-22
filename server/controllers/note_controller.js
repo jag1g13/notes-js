@@ -1,22 +1,15 @@
-import mongodb from 'mongodb'
-
 import * as config from '../config.js'
 import { Note } from '../models/note.js'
 
-function noteCreate (req, res) {
-  console.log(req.body)
-
-  const note = {
+async function noteCreate (req, res) {
+  const note = await new Note({
     title: req.body.title,
-    content: req.body.content
-  }
-  db.collection('notes').insertOne(note, (err, results) => {
-    if (err) {
-      res.send({ error: 'Failed to insert record' })
-    } else {
-      res.send(results.ops[0])
-    }
-  })
+    date: req.body.date,
+    content: req.body.content,
+    metadata: req.body.metadata || undefined
+  }).save()
+
+  res.send(note)
 }
 
 /**
@@ -33,47 +26,25 @@ async function noteList (req, res) {
   res.send(notes)
 }
 
-function noteDetail (req, res) {
-  const id = req.params.id
-  const query = { _id: new mongodb.ObjectID(id) }
-
-  db.collection('notes').findOne(query, (err, item) => {
-    if (err) {
-      res.send({ error: 'Failed to retrieve record' })
-    } else {
-      res.send(item)
-    }
-  })
+async function noteDetail (req, res) {
+  const note = await Note.findById(req.params.id).exec()
+  res.send(note)
 }
 
-function noteUpdate (req, res) {
-  const id = req.params.id
-  const query = { _id: new mongodb.ObjectID(id) }
-  const note = {
+async function noteUpdate (req, res) {
+  const note = await Note.findByIdAndUpdate(req.params.id, {
     title: req.body.title,
     content: req.body.content
-  }
+  }, {
+    new: true
+  }).exec()
 
-  db.collection('notes').update(query, note, (err, results) => {
-    if (err) {
-      res.send({ error: 'Failed to retrieve record' })
-    } else {
-      res.send(note)
-    }
-  })
+  res.send(note)
 }
 
-function noteDelete (req, res) {
-  const id = req.params.id
-  const query = { _id: new mongodb.ObjectID(id) }
-
-  db.collection('notes').removeOne(query, (err, item) => {
-    if (err) {
-      res.send({ error: 'Failed to retrieve record' })
-    } else {
-      res.send('Note ' + id + ' deleted')
-    }
-  })
+async function noteDelete (req, res) {
+  const note = await Note.findByIdAndDelete(req.params.id).exec()
+  res.send(note)
 }
 
 export {
