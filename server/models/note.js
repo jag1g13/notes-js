@@ -52,14 +52,14 @@ class NoteClass {
       env: { ...process.env }
     }
     if (config.git_ssh_keyfile) {
-      options.env['GIT_SSH_COMMAND'] = `ssh -i ${config.git_ssh_keyfile} -o IdentitiesOnly=yes`
+      options.env['GIT_SSH_COMMAND'] = `ssh -i ${config.git_ssh_keyfile} -o IdentitiesOnly=yes` // eslint-disable-line dot-notation
     }
 
     console.log('Pulling changes to notes repo')
     return new Promise((resolve, reject) => {
       childProcess.exec('git pull --ff-only', options, (err, stdout, stderr) => {
         if (err) reject(err)
-        resolve(stdout ? stdout : stderr)
+        resolve(stdout || stderr)
       })
     })
   }

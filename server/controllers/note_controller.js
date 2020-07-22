@@ -25,11 +25,11 @@ function noteCreate (req, res) {
  * Update notes repo then read notes.
  */
 async function noteList (req, res) {
-  await Note.pullRepo(config.notes_repo_dir)
+  await Note.pullRepo(config.notesRepoDir)
     .then(output => console.log(output))
     .catch(err => console.error(err))
 
-  const notes = await Note.list(config.notes_dir)
+  const notes = await Note.list(config.notesDir)
   res.send(notes)
 }
 
@@ -51,7 +51,7 @@ function noteUpdate (req, res) {
   const query = { _id: new mongodb.ObjectID(id) }
   const note = {
     title: req.body.title,
-    content: req.body.content,
+    content: req.body.content
   }
 
   db.collection('notes').update(query, note, (err, results) => {
