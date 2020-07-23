@@ -1,11 +1,14 @@
 import childProcess from 'child_process'
 import fs from 'fs'
 import path from 'path'
+import util from 'util'
 
 import matter from 'gray-matter'
 import mongoose from 'mongoose'
 
 import * as config from '../config.js'
+
+const exec = util.promisify(childProcess.exec)
 
 const NoteSchema = new mongoose.Schema({
   title: { type: String, required: true, maxlength: 100 },
@@ -44,9 +47,8 @@ class NoteClass {
    * Pull changes from upstream to a git repository.
    *
    * @param {string} dirpath - Path of directory containing git repository to update
-   * @returns {Promise<Options<string, Error>} Output of child process
    */
-  static pullRepo (dirpath) {
+  static async pullRepo (dirpath) {
     const options = {
       cwd: dirpath,
       env: { ...process.env }
@@ -56,12 +58,13 @@ class NoteClass {
     }
 
     console.log('Pulling changes to notes repo')
-    return new Promise((resolve, reject) => {
-      childProcess.exec('git pull --ff-only', options, (err, stdout, stderr) => {
-        if (err) reject(err)
-        resolve(stdout || stderr)
-      })
-    })
+
+    try {
+      const git = await exec('git pull --ff-only', options)
+      console.log(git.stdout || git.stderr)
+    } catch (exc) {
+      console.error(exc)
+    }
   }
 
   /**
@@ -70,7 +73,7 @@ class NoteClass {
    * @param {string} dirpath - Path of directory from which to read Notes
    * @returns {Promise<Array<Note>>} Array of Note objects
    */
-  static async list (dirpath) {
+  static async loadFromDir (dirpath) {
     const notesDir = path.resolve(dirpath)
 
     let files = await fs.promises.readdir(notesDir)

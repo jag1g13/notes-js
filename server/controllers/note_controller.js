@@ -29,10 +29,9 @@ async function noteCreate (req, res) {
  */
 async function noteList (req, res) {
   await Note.pullRepo(config.notesRepoDir)
-    .then(output => console.log(output))
-    .catch(err => console.error(err))
+  await Note.loadFromDir(config.notesDir)
 
-  const notes = await Note.list(config.notesDir)
+  const notes = await Note.find({}).sort({ date: 'desc' }).exec()
   res.send(notes)
 }
 
