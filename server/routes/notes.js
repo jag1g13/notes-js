@@ -8,10 +8,10 @@ router.post('/', noteController.noteCreate)
 
 router.get('/', noteController.noteList)
 
-router.get('/:id', noteController.noteDetail)
+router.get('/:date(\\d{4}-\\d{2}-\\d{2})', [noteController.parseIsoDate], noteController.noteDetail)
 
-router.put('/:id', noteController.noteUpdate)
+router.put('/:date(\\d{4}-\\d{2}-\\d{2})', [noteController.parseIsoDate], noteController.noteUpdate)
 
-router.delete('/:id', noteController.noteDelete)
+router.delete('/:date(\\d{4}-\\d{2}-\\d{2})', [noteController.parseIsoDate], noteController.noteDelete)
 
 export default router
