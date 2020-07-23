@@ -21,6 +21,7 @@ if (config.nodeEnv === 'production') {
 }
 
 mongoose.connect(config.dbUrl, {
+  useCreateIndex: true, // ensureIndex is deprecated - use this instead
   useFindAndModify: false, // Required for findOneAndUpdate
   useNewUrlParser: true,
   useUnifiedTopology: true
