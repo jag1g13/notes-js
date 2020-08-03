@@ -4,7 +4,7 @@ import 'bulma/css/bulma.css'
 import iconNotebook from './img/icon-notebook.svg'
 import iconColorSwatch from './img/icon-color-swatch.svg'
 
-import { NotesComponent } from './components/notes.js'
+import { NotesComponent } from './components/NotesComponent.js'
 
 /**
  * Entrypoint to Notes Tracker app.
