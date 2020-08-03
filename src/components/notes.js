@@ -2,7 +2,6 @@ import React from 'react'
 import marked from 'marked'
 
 import ProjectChartComponent from './ProjectChartComponent.js'
-import DoughnutChartComponent from './DoughnutChartComponent.js'
 
 /**
  * Component providing detail and list views of notes fetched from API.
@@ -131,10 +130,6 @@ export function NoteListItemComponent(props) {
                         <figure className="image">
                         </figure>
                     </div>
-                </div>
-
-                <div className="content">
-                    <DoughnutChartComponent data={props.note.metadata.projects} />
                 </div>
             </div>
         </div>
