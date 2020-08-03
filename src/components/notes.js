@@ -1,7 +1,7 @@
 import React from 'react'
-import marked from 'marked'
 
 import ProjectChartComponent from './ProjectChartComponent.js'
+import NoteDetailComponent from './NoteDetailComponent.js'
 import NoteListComponent from './NoteListComponent.js'
 
 /**
@@ -79,20 +79,4 @@ export class NotesComponent extends React.Component {
             </div>
         )
     }
-}
-
-/**
- * Component providing detail of a single note.
- */
-export function NoteDetailComponent(props) {
-    if (props.note) {
-        const content = marked(props.note.content)
-
-        return (
-            <div className="content" dangerouslySetInnerHTML={{
-                __html: content
-            }}></div>
-        )
-    }
-    return <h1>No Content</h1>
 }

@@ -3,7 +3,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import { NoteDetailComponent } from './notes.js'
+import NoteDetailComponent from './NoteDetailComponent.js'
 
 test('displays default message in empty state', () => {
   const { getByText } = render(<NoteDetailComponent />)
