@@ -19,7 +19,7 @@ RUN npm run build-front
 # Production environment
 FROM node:current-slim
 
-RUN apk add --no-cache git openssh
+RUN apt-get update && apt-get install -y git openssh-client
 
 # Create app directory
 WORKDIR /app
