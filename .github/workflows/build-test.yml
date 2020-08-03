@@ -28,7 +28,7 @@ jobs:
     - run: npm ci
     - run: npm run build-front --if-present
     - run: npm test
-    - run: npx standard "server/**/*.js" "src/**/*.js"
+    - run: npm run lint
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v1.1.0

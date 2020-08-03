@@ -1,39 +1,36 @@
 import path from 'path'
 
-import body_parser from 'body-parser'
+import bodyParser from 'body-parser'
 import express from 'express'
-import mongodb from 'mongodb'
+import mongoose from 'mongoose'
 
-import add_routes from './routes/index.js'
+import notesRouter from './routes/notes.js'
 import * as config from './config.js'
 
 const app = express()
 
-app.use(body_parser.json())
+app.use(bodyParser.json())
+app.use('/api/notes', notesRouter)
 
-if (config.node_env === 'production') {
-    // Serve React build dir if running in production mode
-    const static_path = path.resolve('build')
-    app.use(express.static(static_path))
+if (config.nodeEnv === 'production') {
+  // Serve React build dir if running in production mode
+  const staticPath = path.resolve('build')
+  app.use(express.static(staticPath))
 
-    app.get('/', (req, res) => res.sendFile(path.join(static_path, 'index.html')))
+  app.get('/', (req, res) => res.sendFile(path.join(staticPath, 'index.html')))
 }
 
-const mongo_client = mongodb.MongoClient(
-    config.db_url,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }
-)
+mongoose.connect(config.dbUrl, {
+  useCreateIndex: true, // ensureIndex is deprecated - use this instead
+  useFindAndModify: false, // Required for findOneAndUpdate
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
 
-mongo_client.connect((err, database) => {
-    if (err) return console.log(err)
-    database = database.db('notes-js')
+const db = mongoose.connection
+db.on('error', (err) => console.error(err))
+db.once('open', () => console.log('Connected to database'))
 
-    add_routes(app, database)
-
-    app.listen(config.port, () => {
-        console.log('Live on port ' + config.port)
-    })
+app.listen(config.port, config.address, () => {
+  console.log('Live on ' + config.address + ':' + config.port)
 })
