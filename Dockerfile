@@ -1,6 +1,6 @@
 ###################
 # Build environment
-FROM node:current-alpine as build
+FROM node:current-slim as build
 
 # Create app directory
 WORKDIR /app
@@ -17,7 +17,7 @@ RUN npm run build-front
 
 ########################
 # Production environment
-FROM node:current-alpine
+FROM node:current-slim
 
 RUN apk add --no-cache git openssh
 
